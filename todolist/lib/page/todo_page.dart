@@ -26,7 +26,7 @@ class _TodoPageState extends State<TodoPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          insetPadding: const EdgeInsets.all(16), // 👈 margin dari tepi layar
+          insetPadding: const EdgeInsets.all(16),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: IntrinsicHeight(
@@ -56,7 +56,12 @@ class _TodoPageState extends State<TodoPage> {
                       const SizedBox(width: 8),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple.shade50,
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            150,
+                            74,
+                            162,
+                          ),
                         ),
                         onPressed: () {
                           setState(() {
@@ -64,7 +69,10 @@ class _TodoPageState extends State<TodoPage> {
                           });
                           Navigator.pop(context);
                         },
-                        child: const Text("Save"),
+                        child: const Text(
+                          "Save",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),

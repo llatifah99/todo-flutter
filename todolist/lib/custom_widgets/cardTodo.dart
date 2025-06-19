@@ -23,7 +23,15 @@ class CardTodo extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Checkbox(value: todo.isDone, onChanged: onToggle),
-        title: Text(todo.title),
+        title: Text(
+          todo.title,
+          style: TextStyle(
+            decoration: todo.isDone
+                ? TextDecoration.lineThrough
+                : TextDecoration.none,
+            color: todo.isDone ? Colors.grey : Colors.black,
+          ),
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

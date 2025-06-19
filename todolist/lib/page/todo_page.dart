@@ -17,6 +17,66 @@ class _TodoPageState extends State<TodoPage> {
     TodoModel(title: "Buy groceries", isDone: false),
   ];
 
+  void showEditDialog(int index) {
+    final controller = TextEditingController(text: todos[index].title);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          insetPadding: const EdgeInsets.all(16), // 👈 margin dari tepi layar
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "Edit ToDo",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text("Update your task below:"),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(hintText: "Enter todo title"),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancel"),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple.shade50,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            todos[index].title = controller.text;
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Save"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +109,7 @@ class _TodoPageState extends State<TodoPage> {
                       });
                     },
                     onEdit: () {
-                      print("edit");
+                      showEditDialog(index);
                     },
                     onDelete: () {
                       setState(() {

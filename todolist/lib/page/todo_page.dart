@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import '../custom_widgets/appbar.dart';
+import '../custom_widgets/searchbar.dart';
+import '../custom_widgets/cardTodo.dart';
+import '../model/todo_model.dart';
 
-class TodoPage extends StatelessWidget {
+class TodoPage extends StatefulWidget {
   const TodoPage({super.key});
+
+  @override
+  State<TodoPage> createState() => _TodoPageState();
+}
+
+class _TodoPageState extends State<TodoPage> {
+  List<TodoModel> todos = [
+    TodoModel(title: "Go to library at 8 am", isDone: true),
+    TodoModel(title: "Buy groceries", isDone: false),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -14,80 +27,37 @@ class TodoPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // search bar
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.purple.shade50,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  icon: Icon(Icons.search),
-                  hintText: "Search",
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-
+            CustomSearchBar(),
             // batas
             SizedBox(height: 20),
             Text(
               "All to-do :",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
-
             // batas
             SizedBox(height: 10),
+            // todo List
             Expanded(
-              child: SingleChildScrollView(
-                // Card -1
-                child: Column(
-                  children: [
-                    // todo 1
-                    Card(
-                      color: Colors.purple.shade50,
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        leading: Checkbox(value: true, onChanged: null),
-                        title: Text("go to library at 8 am"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.edit),
-                            SizedBox(width: 16),
-                            Icon(Icons.delete),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // todo 2
-                    Card(
-                      color: Colors.purple.shade50,
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        leading: Checkbox(value: true, onChanged: null),
-                        title: Text(
-                          "lorem ipsum dolor si amet blablabla bla bla bla bla bla bla",
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.edit),
-                            SizedBox(width: 16),
-                            Icon(Icons.delete),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: ListView.builder(
+                itemCount: todos.length,
+                itemBuilder: (context, index) {
+                  return CardTodo(
+                    todo: todos[index],
+                    onToggle: (value) {
+                      setState(() {
+                        todos[index].isDone = value!;
+                      });
+                    },
+                    onEdit: () {
+                      print("edit");
+                    },
+                    onDelete: () {
+                      setState(() {
+                        todos.removeAt(index);
+                      });
+                    },
+                  );
+                },
               ),
             ),
           ],

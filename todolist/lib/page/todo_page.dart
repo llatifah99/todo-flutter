@@ -85,6 +85,74 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
+  void showAddDialog() {
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          insetPadding: EdgeInsets.all(16),
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Add new todo:",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Text("Enter your new task below:"),
+                  SizedBox(height: 10),
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(hintText: "e.g. study english"),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("Cancel"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                        ),
+                        onPressed: () {
+                          if (controller.text.trim().isNotEmpty) {
+                            setState(() {
+                              todos.insert(
+                                0,
+                                TodoModel(title: controller.text.trim()),
+                              );
+                            });
+                          }
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Save",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,6 +198,11 @@ class _TodoPageState extends State<TodoPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: showAddDialog,
+        backgroundColor: Colors.purple,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

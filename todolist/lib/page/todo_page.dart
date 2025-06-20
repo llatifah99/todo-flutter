@@ -16,6 +16,25 @@ class _TodoPageState extends State<TodoPage> {
     TodoModel(title: "Go to library at 8 am", isDone: true),
     TodoModel(title: "Buy groceries", isDone: false),
   ];
+  List<TodoModel> filteredTodos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredTodos = List.from(todos);
+  }
+
+  void filterTodos(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredTodos = List.from(todos);
+      } else {
+        filteredTodos = todos.where((todo) {
+          return todo.title.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+    });
+  }
 
   void showEditDialog(int index) {
     final controller = TextEditingController(text: todos[index].title);
@@ -163,7 +182,7 @@ class _TodoPageState extends State<TodoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // search bar
-            CustomSearchBar(),
+            CustomSearchBar(onChanged: filterTodos),
             // batas
             SizedBox(height: 20),
             Text(
@@ -175,13 +194,15 @@ class _TodoPageState extends State<TodoPage> {
             // todo List
             Expanded(
               child: ListView.builder(
-                itemCount: todos.length,
+                itemCount: filteredTodos.length,
                 itemBuilder: (context, index) {
+                  final todo = filteredTodos[index];
                   return CardTodo(
-                    todo: todos[index],
+                    todo: todo,
                     onToggle: (value) {
                       setState(() {
-                        todos[index].isDone = value!;
+                        final todo = filteredTodos[index];
+                        todo.isDone = value!;
                       });
                     },
                     onEdit: () {
@@ -189,7 +210,9 @@ class _TodoPageState extends State<TodoPage> {
                     },
                     onDelete: () {
                       setState(() {
-                        todos.removeAt(index);
+                        final todo = filteredTodos[index];
+                        todos.remove(todo);
+                        filteredTodos.removeAt(index);
                       });
                     },
                   );
